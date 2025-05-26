@@ -4,42 +4,37 @@ Este projeto implementa um serviço de publicação de tarefas assíncronas em C
 
 🔧 Tecnologias Utilizadas
 
-.NET 6
-
-RabbitMQ
-
-Docker
-
-MongoDB (previsto, mas não utilizado neste escopo)
-
-Arquitetura limpa e injeção de dependência
-
-Comunicação via fila de mensagens (mensageria assíncrona)
+- .NET 6
+- RabbitMQ
+- Docker
+- MongoDB (previsto, mas não utilizado neste escopo)
+- Arquitetura limpa e injeção de dependência
+- Comunicação via fila de mensagens (mensageria assíncrona)
 
 📦 Como Rodar o Projeto
 
-Pré-requisitos
+Pré-requisitos:
 
-Docker e Docker Compose instalados
+- Docker e Docker Compose instalados
 
-Passos:
 
-git clone https://github.com/seu-usuario/task-scheduler.git
-cd task-scheduler
-docker-compose up --build
+Passo a passo:
+
+- git clone https://github.com/seu-usuario/task-scheduler.git
+- cd task-scheduler
+- docker-compose up --build
 
 A aplicação ficará disponível em:
 
-API: http://localhost:5000
+- API: http://localhost:5000
+- RabbitMQ UI: http://localhost:15672 (login: guest, senha: guest)
 
-RabbitMQ UI: http://localhost:15672 (login: guest, senha: guest)
 
 📬 Como Usar a API
 
-Criar uma nova tarefa
+Criar uma nova tarefa:
 
 Endpoint:
-
 POST /api/tasks
 
 Exemplo de Payload:
@@ -59,10 +54,14 @@ Exemplo de resposta
   "id": "d88cd2ed-5649-4db4-bc37-e845eef81f38"
 }
 ```
+<hr>
 
+Recuperar status de uma tarefa:
+
+Endpoint:
 GET /api/tasks{id}
 
-Exemplo de Payload:
+Exemplo:
 ```
 /api/tasks/d88cd2ed-5649-4db4-bc37-e845eef81f38
 ```

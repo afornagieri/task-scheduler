@@ -37,9 +37,14 @@ public static class ServiceDependencyInjection
         services.AddScoped<IJobRepository, JobRepository>();
 
 #pragma warning disable CS8601 // Possible null reference assignment.
-        services.AddSingleton<IConnectionFactory>(new ConnectionFactory
+        services.AddSingleton<IConnectionFactory>(sp =>
         {
-            HostName = appSettings?.RabbitMqSettings?.HostName
+            return new ConnectionFactory
+            {
+                HostName = appSettings?.RabbitMqSettings?.HostName,
+                UserName = appSettings?.RabbitMqSettings?.UserName,
+                Password = appSettings?.RabbitMqSettings?.Password
+            };
         });
 #pragma warning restore CS8601 // Possible null reference assignment.
 

@@ -8,11 +8,13 @@ namespace TaskScheduler.Infra.MessageBroker;
 public class RabbitPublisher : IRabbitPublisher
 {
     private readonly AppSettings _settings;
+    private readonly IConnectionFactory _connectionFactory;
     private IChannel? _channel;
 
-    public RabbitPublisher(AppSettings settings)
+    public RabbitPublisher(AppSettings settings, IConnectionFactory connectionFactory)
     {
         _settings = settings ?? throw new ArgumentNullException(nameof(settings));
+        _connectionFactory = connectionFactory ?? throw new ArgumentNullException(nameof(connectionFactory));
     }
 
     public async Task PublishAsync(string message)
@@ -33,16 +35,7 @@ public class RabbitPublisher : IRabbitPublisher
         };
 #pragma warning restore CS8601 // Possible null reference assignment.
 
-        IConnection connection;
-        try
-        {
-            connection = await factory.CreateConnectionAsync();
-        }
-        catch (Exception)
-        {
-            throw;
-        }
-
+        await using var connection = await _connectionFactory.CreateConnectionAsync();
         _channel = await connection.CreateChannelAsync();
 
 #pragma warning disable CS8604 // Possible null reference argument.

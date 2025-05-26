@@ -15,7 +15,19 @@ public class TasksController : ControllerBase
         _jobService = jobService;
     }
 
+    /// <summary>
+    /// Get a job status given id
+    /// </summary>
+    /// <param name="id">Unique identifier</param>
+    /// <returns>
+    /// 200 OK
+    /// 404 Not Found
+    /// 500 Internal Server Error
+    /// </returns>
     [HttpGet("{id}")]
+    [ProducesResponseType(StatusCodes.Status200OK)]
+    [ProducesResponseType(StatusCodes.Status404NotFound)]
+    [ProducesResponseType(StatusCodes.Status500InternalServerError)]
     public async Task<IActionResult> GetJobStatus(Guid id)
     {
         var job = await _jobService.GetJobAsync(id);
@@ -35,16 +47,22 @@ public class TasksController : ControllerBase
         });
     }
 
+    /// <summary>
+    /// Enqueue a new job
+    /// </summary>
+    /// <param name="job">Job object to be created</param>
+    /// <returns>
+    /// 202 Accepted
+    /// 400 Bad Request in ArgumentNullException or ArgumentException
+    /// 500 Internal Server Error
+    /// </returns>
     [HttpPost]
+    [ProducesResponseType(StatusCodes.Status202Accepted)]
+    [ProducesResponseType(StatusCodes.Status400BadRequest)]
+    [ProducesResponseType(StatusCodes.Status500InternalServerError)]
     public async Task<IActionResult> EnqueueJob([FromBody] JobDto job)
     {
-        if (!ModelState.IsValid)
-        {
-            return BadRequest(ModelState);
-        }
-
         var createdJobId = await _jobService.CreateJobAsync(job);
-
         return Accepted(new { id = createdJobId });
     }
 

@@ -1,6 +1,5 @@
 using System.Text;
 using RabbitMQ.Client;
-using RabbitMQ.Client.Exceptions;
 using TaskScheduler.Domain.Settings;
 using TaskScheduler.Infra.MessageBroker.Interfaces;
 
@@ -23,6 +22,8 @@ public class RabbitPublisher : IRabbitPublisher
             throw new ArgumentException("Message cannot be null or empty.", nameof(message));
         }
 
+        message ??= string.Empty;
+
 #pragma warning disable CS8601 // Possible null reference assignment.
         var factory = new ConnectionFactory
         {
@@ -37,9 +38,8 @@ public class RabbitPublisher : IRabbitPublisher
         {
             connection = await factory.CreateConnectionAsync();
         }
-        catch (BrokerUnreachableException ex)
+        catch (Exception)
         {
-            Console.WriteLine($"Unable to connect to RabbitMQ: {ex.Message}");
             throw;
         }
 
@@ -58,7 +58,7 @@ public class RabbitPublisher : IRabbitPublisher
 
         await _channel.BasicPublishAsync(
             exchange: "",
-            routingKey: _settings.RabbitMqSettings.QueueName!,
+            routingKey: _settings.RabbitMqSettings.QueueName,
             body: body);
     }
 }

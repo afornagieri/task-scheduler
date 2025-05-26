@@ -1,3 +1,4 @@
+using TaskScheduler.Api.Middlewares;
 using TaskScheduler.Api.ServiceExtensions;
 
 var builder = WebApplication.CreateBuilder(args);
@@ -27,7 +28,7 @@ if (app.Environment.IsDevelopment())
 
 app.UseHttpsRedirection();
 
-app.UseAuthorization();
+app.UseMiddleware<ErrorHandlerMiddleware>();
 
 app.MapControllers();
 
